@@ -37,6 +37,7 @@
 #include <fastrtps/rtps/reader/RTPSReader.h>
 
 #include <chrono>
+#include <random>
 #include <thread>
 
 namespace eprosima {
@@ -47,6 +48,12 @@ std::mutex RTPSDomain::m_mutex;
 std::atomic<uint32_t> RTPSDomain::m_maxRTPSParticipantID(1);
 std::vector<RTPSDomain::t_p_RTPSParticipant> RTPSDomain::m_RTPSParticipants;
 std::set<uint32_t> RTPSDomain::m_RTPSParticipantIDs;
+
+static std::random_device rd;  // Will be used to obtain a seed for the random number engine
+static std::mt19937 generator(rd()); // Standard mersenne_twister_engine seeded with rd()
+static std::uniform_int_distribution<uint32_t> dist(0U, 0xffffffffU);
+static const uint32_t _randomGuidSeed = dist(generator);
+
 
 void RTPSDomain::stopAll()
 {
@@ -63,7 +70,8 @@ void RTPSDomain::stopAll()
 
 RTPSParticipant* RTPSDomain::createParticipant(
         const RTPSParticipantAttributes& attrs,
-        RTPSParticipantListener* listen)
+        RTPSParticipantListener* listen,
+        bool useRandomSeed)
 {
     std::lock_guard<std::mutex> guard(m_mutex);
     logInfo(RTPS_PARTICIPANT,"");
@@ -145,6 +153,9 @@ RTPSParticipant* RTPSDomain::createParticipant(
         {
             guidP.value[2] = 127;
             guidP.value[3] = 1;
+        }
+        if (useRandomSeed) {
+            pid = static_cast<int>(_randomGuidSeed);
         }
         guidP.value[4] = octet(pid);
         guidP.value[5] = octet(pid >> 8);

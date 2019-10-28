@@ -140,7 +140,8 @@ bool Domain::removeSubscriber(Subscriber* sub)
 
 Participant* Domain::createParticipant(
         const std::string& participant_profile,
-        ParticipantListener* listen)
+        ParticipantListener* listen,
+        bool useRandomSeed)
 {
     if (false == default_xml_profiles_loaded)
     {
@@ -155,16 +156,17 @@ Participant* Domain::createParticipant(
         return nullptr;
     }
 
-    return createParticipant(participant_att, listen);
+    return createParticipant(participant_att, listen, useRandomSeed);
 }
 
 Participant* Domain::createParticipant(
         const eprosima::fastrtps::ParticipantAttributes& att,
-        ParticipantListener* listen)
+        ParticipantListener* listen,
+        bool useRandomSeed)
 {
     Participant* pubsubpar = new Participant();
     ParticipantImpl* pspartimpl = new ParticipantImpl(att,pubsubpar,listen);
-    RTPSParticipant* part = RTPSDomain::createParticipant(att.rtps, &pspartimpl->m_rtps_listener);
+    RTPSParticipant* part = RTPSDomain::createParticipant(att.rtps, &pspartimpl->m_rtps_listener, useRandomSeed);
 
     if(part == nullptr)
     {

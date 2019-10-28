@@ -66,11 +66,13 @@ class RTPSDomain
          * @snippet fastrtps_example.cpp ex_RTPSParticipantCreation
          * @param attrs RTPSParticipant Attributes.
          * @param plisten Pointer to the ParticipantListener.
+         * @param useRandomSeed Use a static random value rather than PID to seed GUID
          * @return Pointer to the RTPSParticipant.
          */
         RTPS_DllAPI static RTPSParticipant* createParticipant(
                 const RTPSParticipantAttributes& attrs,
-                RTPSParticipantListener* plisten = nullptr);
+                RTPSParticipantListener* plisten = nullptr,
+                bool useRandomSeed = false);
 
         /**
          * Create a RTPSWriter in a participant.

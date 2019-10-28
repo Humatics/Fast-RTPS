@@ -53,21 +53,25 @@ class Domain
          * Create a Participant from a profile name.
          * @param participant_profile Participant profile name.
          * @param listen ParticipantListener Pointer.
+         * @param useRandomSeed Use a static random value rather than PID to seed GUID
          * @return Participant pointer. (nullptr if not created.)
          */
         RTPS_DllAPI static Participant* createParticipant(
                 const std::string& participant_profile,
-                ParticipantListener* listen = nullptr);
+                ParticipantListener* listen = nullptr,
+                bool useRandomSeed = false);
 
         /**
          * Create a Participant.
          * @param att Participant Attributes.
          * @param listen ParticipantListener Pointer.
+         * @param useRandomSeed Use a static random value rather than PID to seed GUID
          * @return Participant pointer. (nullptr if not created.)
          */
         RTPS_DllAPI static Participant* createParticipant(
                 const ParticipantAttributes& att,
-                ParticipantListener* listen = nullptr);
+                ParticipantListener* listen = nullptr,
+                bool useRandomSeed = false);
 
         //!Fills participant_attributes with the default values.
         RTPS_DllAPI static void getDefaultParticipantAttributes(ParticipantAttributes& participant_attributes);
